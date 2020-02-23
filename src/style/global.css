@@ -1,0 +1,20 @@
+/* a, address, b, big, blockquote, body, center, cite, code, dd, del, div, dl, dt, em, fieldset, font, form, h1, h2, h3, h4, h5, h6, html, i, iframe, img, ins, label, legend, li, ol, p, pre, small, span, strong, u, ul, var 
+{
+    margin: 0;
+    padding: 0;
+} */
+a{
+    text-decoration: none;
+    /* color: #9ba7b5; */
+    color:#bcbcbc;
+}
+li {
+    list-style: none;
+}
+/* 去除div点击焦点 */
+div:focus{
+	outline:none;
+}
+a:visited {
+    /* color:#cbced4 */
+}

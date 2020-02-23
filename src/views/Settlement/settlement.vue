@@ -78,7 +78,7 @@ export default {
       let stringBookList = JSON.stringify(bookList)
       VueCookies.set('bookList',stringBookList)
 
-      this.$router.push("payment")
+      this.$router.push("pay")
     //   this.$http.payment({
     //     userId: VueCookies.get("userId"),
     //     bookList: bookList

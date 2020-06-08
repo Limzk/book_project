@@ -2,7 +2,8 @@
 <div>
     <div class="menu">
         <Icon type="md-cash" size="30" class="cashIcon"/>
-        <strong style="margin-left:8px;">收银台</strong>
+        <strong>收银台</strong>
+        <a class="index" href="/home">首页</a>     
     </div>
     <div class="pay">
       <div class="success">
@@ -11,15 +12,14 @@
       </div>
       <div class="purchaseInfo">
           <div class="info">
-              <p>订单编号：&nbsp;{{ info.out_trade_no }}</p>
+              <p>订单编号：&nbsp;{{ info.orderId }}</p>
           </div>
           <div class="info">
-              <p>购买金额：&nbsp;￥{{ info.total_amount }}</p>
+              <p>购买金额：&nbsp;￥{{ info.totalAmount }}</p>
           </div>
           <div class="info">
-              <p>创建时间：&nbsp;{{ info.timestamp }}</p>
+              <p>创建时间：&nbsp;{{ info.payTime | timeFilter }}</p>
           </div>
-
       </div>
   </div>
 </div>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { parseTime } from "../../utils/parseTime";
 import VueCookies from "vue-cookies";
 export default {
     data() {
@@ -34,25 +35,17 @@ export default {
             info:{}
         }
     },
+    filters:{
+        timeFilter(val) {
+            if(val) return parseTime(val)
+        }
+    },
     created(){
         this.getRouteQuery()
     },
     methods: {
         getRouteQuery() {
-            this.info = this.$route.query
-            let bookList = JSON.parse(VueCookies.get('bookList'))
-            // 防止页面刷新又调取接口
-            VueCookies.remove('bookList')
-            if(bookList !== null) {
-                this.$http.paymentSuccessful({
-                    userId: VueCookies.get('userId'),
-                    orderId: this.info.out_trade_no,
-                    totalAmout: this.info.total_amount,
-                    bookList: bookList
-                }).then( r =>{
-                    
-                })
-            }         
+            this.info = this.$route.params.data
         }
     },
 }
@@ -60,21 +53,27 @@ export default {
 
 <style scoped>
 .menu {
-    padding-left: 30px;
+    padding:0 30px;
     width: 100%;
     border-bottom: 2px solid #ABABAB;
-    height: 60px;
-    line-height: 60px;
+    height: 50px;
+    line-height: 50px;
      /* background: #FFFFF0;     */
 }
 .menu .cashIcon{
     position: relative;
     top:5px;
 }
+.menu .index{
+    float: right;
+    font-weight: 600;
+    font-size: 15px;
+    color: #515A6E;
+}
 .pay{
     width: 90%;
     /* height: 600px; */
-    margin: 100px auto;
+    margin: 120px auto;
     background: #f5f5f5;
     border-top: 3px solid #3CB371;
 }
@@ -84,6 +83,7 @@ export default {
     margin: 30px auto;
     /* background: burlywood; */
     text-align: center;
+    font-size: 16px;
 
 }
 .success span{
@@ -98,7 +98,7 @@ export default {
     margin: 0 auto;
     /* background: yellowgreen; */
     /* text-align: center; */
-    padding-left: 28%;
+    padding-left: 32%;
     margin-top: 50px;
 }
 .purchaseInfo  .info{

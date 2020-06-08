@@ -9,29 +9,25 @@
       </div>
     </div>
 
-    <div class="register">
-      <h2>创建账号</h2>
-      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-        <strong>用户名</strong>
-        <span style="color:red">*</span>
-        <FormItem prop="username">
-          <Input v-model="formValidate.username"/>
-        </FormItem>
-        <strong>密码</strong>
-        <span style="color:red">*</span>
-        <FormItem prop="password" >
-          <Input v-model="formValidate.password" type="password"/>
-        </FormItem>
-        <strong>确认密码</strong>
-        <span style="color:red">*</span>
-        <FormItem prop="checkPass" >
-          <Input v-model="formValidate.checkPass" type="password"/>
-        </FormItem>
-        <FormItem style="text-align: center">
-          <Button type="primary" @click="handleSubmit('formValidate')">注册</Button>
-        </FormItem>
-      </Form>
-    </div>
+    <transition name="enter">
+      <div class="register" v-if="show">
+        <h2>创建账号</h2>
+        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
+          <FormItem prop="username" label="用户名">
+            <Input v-model="formValidate.username" />
+          </FormItem>
+          <FormItem prop="password" label="密码">
+            <Input v-model="formValidate.password" type="password" />
+          </FormItem>
+          <FormItem prop="checkPass" label="确认密码">
+            <Input v-model="formValidate.checkPass" type="password" />
+          </FormItem>
+          <FormItem style="text-align: center">
+            <Button type="primary" @click="handleSubmit('formValidate')">注册</Button>
+          </FormItem>
+        </Form>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -39,97 +35,113 @@
 export default {
   data() {
     var username = (rule, value, callback) => {
-      if(value == "") {
+      if (value == "") {
         callback(new Error("请输入用户名！"));
-      }
-      else {
-        callback()
+      } else {
+        callback();
       }
     };
     var password = (rule, value, callback) => {
-      if(value == "") {
+      if (value == "") {
         callback(new Error("请输入密码！"));
-      }
-      else {
-        callback()
+      } else {
+        callback();
       }
     };
 
     var checkPass = (rule, value, callback) => {
-      if(value == "") {
+      if (value == "") {
         callback(new Error("请确认密码！"));
       }
-      if(value !== this.formValidate.password) {
+      if (value !== this.formValidate.password) {
         callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
       }
-      else {
-        callback()
-      }
-    }
+    };
     return {
+      show: false,
       formValidate: {
         username: "",
         password: "",
         checkPass: ""
       },
       ruleValidate: {
-        username: [{validator: username, trigger: "blur"}],
-        password: [{validator: password, trigger: "blur"}],
-        checkPass: [{validator: checkPass, trigger: "blur"}]
+        username: [{ validator: username, trigger: "blur" }],
+        password: [{ validator: password, trigger: "blur" }],
+        checkPass: [{ validator: checkPass, trigger: "blur" }]
       }
     };
+  },
+  mounted() {
+    this.show = true
   },
   methods: {
     goLogin() {
       this.$router.push("login");
     },
     goHome() {
-      this.$router.push('home')
+      this.$router.push("home");
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {       
+      this.$refs[name].validate(valid => {
         if (valid) {
-          this.$http.register({
-            username: this.formValidate.username,
-            password: this.$md5(this.formValidate.password)
-          }).then ( r => {
-            if( r.code == 30001) {
-              this.$Message.warning({
-                    background: true,
-                    content: '已存在该用户名，请重新输入！'
+          this.$http
+            .register({
+              username: this.formValidate.username,
+              password: this.formValidate.password
+            })
+            .then(r => {
+              if (r.code == 30001) {
+                this.$Message.warning({
+                  background: true,
+                  content: "已存在该用户名，请重新输入！"
                 });
-                return             
-            }
-            this.$Message.success({
+                return;
+              }
+              this.$Message.success({
                 background: true,
-                content: '注册成功！即将为您跳转至登录页面'
-            }); 
-            setTimeout(()=>{
-              this.$router.push('login')
-            },1500 )
-            
-          }).catch( err => {
+                content: "注册成功！即将为您跳转至登录页面"
+              });
+              setTimeout(() => {
+                this.$router.push("login");
+              }, 1500);
+            })
+            .catch(err => {
               this.$Message.error({
                 background: true,
-                content: '服务器繁忙，请稍后重试！'
+                content: "服务器繁忙，请稍后重试！"
               });
-          })
-        } 
-        else {
-          return false
+            });
+        } else {
+          return false;
         }
       });
-    },
+    }
   }
 };
 </script>
 
-<style  >
+<style  scoped>
+.enter-enter-active {
+  transition: all .8s ease;
+}
+.enter-enter {
+  transform: translateY(35px);
+}
+.registerContent  {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background: url('../../assets/background3.jpg') no-repeat; 
+  background-size: cover;
+}
+.registerContent h2 {
+  color: #000;
+}
 .registerContent .layout {
-  border: 1px solid #d7dde4;
-  background: #f5f7f9;
+  /* background: #f5f7f9; */
   position: relative;
-  border-radius: 4px;
   overflow: hidden;
 }
 .registerContent .layout-ceiling {
@@ -143,26 +155,29 @@ export default {
 }
 .registerContent .layout-ceiling-main a {
   /* color: #9ba7b5; */
-  color:#bcbcbc;
+  color: #bcbcbc;
 }
 .registerContent .register {
-  height: 390px;
+  /* height: 390px; */
   width: 530px;
-  margin: 20px auto;
+  margin: 90px auto;
   padding: 20px;
   border: 1px solid #d8dee2;
   border-radius: 5px;
+  background: rgba(69, 137, 171, 0.2);
 }
-.registerContent .register  h2{
+.registerContent .register h2 {
   text-align: center;
 }
-.registerContent .register .ivu-form-item-content {
-  margin-left: 0px !important;
-  height: 35px;
-  margin-top: 5px;
-  margin-bottom: 2px;
+.registerContent .register .ivu-form-item {
+  /* font-weight: 550; */
+  
 }
 .registerContent .register .ivu-btn {
   width: 220px;
+  margin-top: 10px;
+  background: rgba(45, 140, 240, 0.2);
+  border-color: rgba(45, 140, 240, 0.2);
 }
+
 </style>

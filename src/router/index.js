@@ -4,17 +4,22 @@ import home from '@/views/Home/home'
 import login from '@/views/Login/login'
 import register from '@/views/Register/register'
 import detail from '@/views/Detail/detail'
-import personal from '@/views/PersonalCentral/personalCentral'
-import personalMessage from '@/views/PersonalCentral/personalMessage'
-import rentObject from '@/views/RentObject/rentObject'
-import myPublish from '@/views/MyPublish/myPublish'
 import shopCar from '@/views/ShopCar/shopCar'
 import settlement from '@/views/Settlement/settlement'
-import payment from '@/views/Payment/payment'
-import pay from '@/views/Pay/pay'
-import paymentSuccessful from '@/views/PaymentSuccessful/paymentSuccessful'
-
-
+import Alipay from '@/views/PayMethod/Alipay'
+import successfulByAilpay from '@/views/PaymentSuccessful/successfulByAilpay'
+import successfulByGold from '@/views/PaymentSuccessful/successfulByGold'
+import personalCenter from '@/views/PersonalCenter/personal-center'
+import myOrder from '@/views/PersonalCenter/my-order'
+import myBill from '@/views/PersonalCenter/my-bill'
+import myInfo from '@/views/PersonalCenter/my-info'
+import myBook from '@/views/PersonalCenter/my-book'
+import myCollect from '@/views/PersonalCenter/my-collect'
+import uploadBook from '@/views/PersonalCenter/upload-book'
+import message from '@/views/Message/message'
+import commentMessage from '@/views/Message/comment-message'
+import systemMessage from '@/views/Message/system-message'
+import reviewMessage from '@/views/Message/review-message'
 
 Vue.use(Router)
 
@@ -49,22 +54,20 @@ export default new Router({
       component: detail
     },
     {
-      path: '/personal',
-      component: personal,
-      children:[
-        { path: '/personalMessage', name:'personalMessage', component: personalMessage},
-        { path: '/myPublish', name:'myPublish', component: myPublish},
-      ]
-    },
-    {
-      path: '/rentObject',
-      name: 'rentObject',
-      component: rentObject
-    },
-    {
       path: '/shopCar',
       name: 'shopCar',
       component: shopCar
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: message,
+      redirect: '/message/systemMessage',
+      children:[
+        { path: 'systemMessage' , name: 'systemMessage' ,component: systemMessage},
+        { path: 'commentMessage' , name: 'commentMessage' ,component: commentMessage},
+        { path: 'reviewMessage' , name: 'reviewMessage' ,component: reviewMessage},
+      ]
     },
     {
       path: '/settlement',
@@ -72,19 +75,33 @@ export default new Router({
       component: settlement
     },
     {
-      path: '/payment',
-      name: 'payment',
-      component: payment
+      path: '/Alipay',
+      name: 'Alipay',
+      component: Alipay
     },  
     {
-      path: '/pay',
-      name: 'pay',
-      component: pay
+      path: '/successfulByAilpay',
+      name: 'successfulByAilpay',
+      component: successfulByAilpay
     },  
     {
-      path: '/paymentSuccessful',
-      name: 'paymentSuccessful',
-      component: paymentSuccessful
+      path: '/successfulByGold',
+      name: 'successfulByGold',
+      component: successfulByGold
+    },  
+    {
+      path: '/personalCenter',
+      name: 'personal-center',
+      component: personalCenter,
+      redirect:'/personalCenter/myInfo',
+      children:[
+        { path: 'myInfo', name: 'my-info' ,component: myInfo},
+        { path: 'myOrder', name: 'my-order', component: myOrder},
+        { path: 'myBill', name: 'my-bill', component: myBill},
+        { path: 'myBook', name: 'my-book' ,component: myBook},
+        { path: 'myCollect', name: 'my-collect' ,component: myCollect},
+        { path: 'uploadBook', name: 'upload-book' ,component: uploadBook},
+      ]
     },  
   ]
 })

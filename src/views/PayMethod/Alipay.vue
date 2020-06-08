@@ -8,10 +8,11 @@
 <script>
 import VueCookies from "vue-cookies";
 export default {
-data() {
-    return {
-        payHTML:''
-    }
+    name:"Alipay",
+    data() {
+        return {
+            payHTML:''
+        }
 },
 created() {
     this.getHTML()

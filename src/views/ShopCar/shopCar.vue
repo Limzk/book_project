@@ -28,7 +28,7 @@
                     </Checkbox>
                   </li>
                   <li>
-                    <img />
+                    <img :src="'http://localhost:8888'+item.bookUrl"/>
                   </li>
                   <li>{{item.bookName}}</li>
                   <li>{{item.bookQuantity}}</li>
@@ -67,31 +67,32 @@
 <script>
 import VueCookies from "vue-cookies";
 export default {
+  name:"shopCar",
   data() {
     return {
       checks: false,
       check: false,
-      // cartBookList: [],
-      cartBookList: [
-        {
-          bookId: 1,
-          bookName: "老人与海",
-          bookQuantity:1,
-          amount: 100,
-          quantity: 2,
-          totalAmount: 200,
-          check: false
-        },
-        {
-          bookId: 2,
-          bookName: "老人与蛇",
-          bookQuantity:20,
-          amount: 100,
-          quantity: 2,
-          totalAmount: 200,
-          check: false
-        },
-      ],
+      cartBookList: [],
+      // cartBookList: [
+      //   {
+      //     bookId: 1,
+      //     bookName: "老人与海",
+      //     bookQuantity:0,
+      //     amount: 100,
+      //     quantity: 2,
+      //     totalAmount: 200,
+      //     check: false
+      //   },
+      //   {
+      //     bookId: 2,
+      //     bookName: "老人与蛇",
+      //     bookQuantity:20,
+      //     amount: 100,
+      //     quantity: 2,
+      //     totalAmount: 200,
+      //     check: false
+      //   },
+      // ],
       total: 0,
       checkBookList: []
     };
@@ -116,6 +117,14 @@ export default {
     //进入结算页面
     settlement() {
       this.clickCheckBox().then(() => {
+        let flag = false
+        this.checkBookList.some( item =>{
+          if(item.bookQuantity === 0){
+            this.$Message.warning(`当前书籍《${item.bookName}》库存为0,请重新选择`)
+            flag = true
+          }
+        })
+        if(flag) return
         // this.$router.push({ name: 'detail', params: { id : id } })
         this.$router.push("/settlement");
         sessionStorage.setItem("data", JSON.stringify(this.checkBookList));
@@ -150,16 +159,22 @@ export default {
       }
     },
     //调整数量
-    changNum(item,num) {
+    changNum(item) {
       this.$http.cartAdjust( {
-        quantity: num, 
+        quantity: item.quantity, 
         bookId: item.bookId,
         userId: VueCookies.get("userId"),
       }).then( r => {
-        this.cartBookList.forEach( ele =>{
+        // this.cartBookList.forEach( ele =>{
+        //   if(ele.bookId === item.bookId) {
+        //    ele.quantity = r.data.quantity
+        //    ele.totalAmount = r.data.totalAmount
+        //   }
+        // })
+        this.cartBookList.find( ele =>{
           if(ele.bookId === item.bookId) {
-           ele.quantity = r.data.quantity
-           ele.totalAmount = r.data.totalAmount
+            ele.quantity = r.data.quantity
+            ele.totalAmount = r.data.totalAmount
           }
         })
       })
@@ -196,7 +211,7 @@ export default {
         }
       });
     },
-    // 删除之前选择书籍
+    // 选择书籍
     clickCheckBox() {
       return new Promise(resovle => {
         this.checkBookList = [];
@@ -227,7 +242,7 @@ export default {
             this.$http
               .deleteCartBook({
                 userId: VueCookies.get("userId"),
-                bookId: bookIds
+                bookIds: bookIds
               })
               .then(res => {
                 this.$Message.success({
@@ -236,9 +251,7 @@ export default {
                 });
                 for (let i = 0; i < this.checkBookList.length; i++) {
                   for (let j = 0; j < this.cartBookList.length; j++) {
-                    if (
-                      this.checkBookList[i].bookId === this.cartBookList[j].bookId
-                    ) {
+                    if ( this.checkBookList[i].bookId === this.cartBookList[j].bookId) {
                       this.cartBookList.splice(j, 1);
                       break;
                     }
@@ -311,28 +324,33 @@ export default {
 
 .shop_detail .shop_content .shop_book {
   width: 100%;
-  margin-top: -10px;
+  /* margin-top: -10px; */
   margin-left: -6px;
 }
 .shop_detail .shop_content .shop_book ul{
- height: 140px;
+ height: 120px;
 }
 .shop_detail .shop_content .shop_book li{
   float: left;
   width: 10%;
   text-align: center;
-  height: 120px;
+  height: 100px;
   line-height: 120px;
+}
+.shop_detail .shop_content .shop_book li img{
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
 }
 .shop_detail .shop_content .shop_book li:nth-child(1){
   width: 5%;
 }
 .shop_detail .shop_content .shop_book li:nth-child(2){
   width: 15%;
-    background: url("../../assets/book.jpg");
+  /* background: url("../../assets/book.jpg");
   background-size: contain;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
 }
 .shop_detail .shop_content .shop_book li:nth-child(3){
   width: 29%;

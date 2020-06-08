@@ -1,0 +1,44 @@
+{
+  "id": "1721950",
+  "name": "myIcon",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7466506",
+      "name": "多人在线聊天，聊天，群聊",
+      "font_class": "chat",
+      "unicode": "e692",
+      "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "14167107",
+      "name": "收藏",
+      "font_class": "no-collect",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "5150276",
+      "name": "收藏",
+      "font_class": "collect",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "1221242",
+      "name": "点赞",
+      "font_class": "HaveThumbUp",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "13768625",
+      "name": "点赞",
+      "font_class": "NoThumbUp",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    }
+  ]
+}

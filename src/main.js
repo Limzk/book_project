@@ -9,6 +9,7 @@ import 'view-design/dist/styles/iview.css';
 // import store from './store'
 import $ from 'jquery'
 import '@/style/global.css'   //global style
+import '@/icon/iconfont.js'   // global icon
 import * as api from '@/utils/api'
 import VueCookies from 'vue-cookies'
 
